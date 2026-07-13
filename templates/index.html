@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Résumé</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Text:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="brand">
+        <span class="brand-mark">R</span>
+        <span class="brand-name">Résumé</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <section class="hero">
+      <h1>Résume n'importe quel document,<br>en un instant.</h1>
+      <p>Dépose un fichier et obtiens l'essentiel en quelques secondes.</p>
+    </section>
+
+    <section class="panel">
+
+      <div class="upload-zone" id="dropZone">
+        <input type="file" id="fileInput" accept=".txt,.pdf,.docx" hidden>
+
+        <div class="upload-icon">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M12 15.5V4M12 4L7.5 8.5M12 4l4.5 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 15.5v3a2 2 0 002 2h12a2 2 0 002-2v-3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <p class="upload-title">Glisse ton fichier ici</p>
+        <p class="upload-sub">ou <span class="link-text">clique pour parcourir</span></p>
+
+        <div class="filetag-row">
+          <span class="filetag">TXT</span>
+          <span class="filetag">PDF</span>
+          <span class="filetag">DOCX</span>
+        </div>
+
+        <div class="file-selected hidden" id="fileSelected">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <path d="M14 2v6h6"/>
+          </svg>
+          <span id="fileName"></span>
+          <button id="removeFile" type="button" aria-label="Retirer le fichier">✕</button>
+        </div>
+      </div>
+
+      <button id="summarizeBtn" disabled>
+        <span class="btn-label">Générer le résumé</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <div id="loadingIndicator" class="loading hidden">
+        <div class="loading-bars">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <p id="loadingText">Lecture du document...</p>
+      </div>
+
+      <div id="errorBox" class="error hidden">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/>
+        </svg>
+        <span id="errorText"></span>
+      </div>
+
+    </section>
+
+    <section id="resultBox" class="result hidden">
+      <div class="result-header">
+        <h2>Résumé</h2>
+        <button id="copyBtn" class="copy-btn" type="button">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+          </svg>
+          Copier
+        </button>
+      </div>
+
+      <p id="summaryText" class="summary-text"></p>
+
+      <div class="stats-row">
+        <div class="stat">
+          <span class="stat-value" id="originalLen">–</span>
+          <span class="stat-label">mots — original</span>
+        </div>
+        <div class="stat-arrow">→</div>
+        <div class="stat">
+          <span class="stat-value" id="summaryLen">–</span>
+          <span class="stat-label">mots — résumé</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="compressionRate">–</span>
+          <span class="stat-label">compression</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    © 2026 Résumé
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

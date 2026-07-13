@@ -4,3 +4,7 @@ rouge-score
 tqdm
 numpy
 datasets
+pytest
+flask
+python-docx
+pypdf

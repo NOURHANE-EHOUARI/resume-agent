@@ -5,8 +5,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 CHECKPOINT_DIR = os.path.join(BASE_DIR, "checkpoints")
 
-TRAIN_FILE = os.path.join(DATA_DIR, "train.csv")   # colonnes attendues: text,summary
-VAL_FILE = os.path.join(DATA_DIR, "val.csv")
+TRAIN_FILE = os.path.join(DATA_DIR, "train_subset.csv")   # colonnes attendues: text,summary
+VAL_FILE = os.path.join(DATA_DIR, "val_subset.csv")
 TEST_FILE = os.path.join(DATA_DIR, "test.csv")
 
 TOKENIZER_PATH = os.path.join(DATA_DIR, "tokenizer.json")
@@ -21,19 +21,19 @@ EOS_TOKEN_ID = 2
 UNK_TOKEN_ID = 3
 
 # --- Données ---
-MAX_SOURCE_LEN = 400     # longueur max du texte source (en tokens)
+MAX_SOURCE_LEN = 300     # longueur max du texte source (en tokens)
 MAX_SUMMARY_LEN = 80     # longueur max du résumé (en tokens)
 
 # --- Modèle ---
-EMBEDDING_DIM = 256
-HIDDEN_DIM = 512
+EMBEDDING_DIM = 128
+HIDDEN_DIM = 256
 NUM_LAYERS = 1
 DROPOUT = 0.3
 
 # --- Entraînement ---
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 LEARNING_RATE = 1e-3
-NUM_EPOCHS = 20
+NUM_EPOCHS = 6
 TEACHER_FORCING_RATIO = 0.5
 CLIP_GRAD_NORM = 1.0
 DEVICE = "cuda"  # sera automatiquement remplacé par "cpu" si aucun GPU n'est disponible

@@ -16,19 +16,19 @@ def convert_split(dataset_split, output_path):
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-    dataset = load_dataset("reciTAL/mlsum", revision="refs/convert/parquet")
+    dataset = load_dataset(
+        "reciTAL/mlsum",
+        revision="refs/convert/parquet",
+        data_files={
+            "train": "fr/train/*.parquet",
+            "validation": "fr/validation/*.parquet",
+            "test": "fr/test/*.parquet",
+        },
+    )
 
-    # Vérification : affiche la structure du dataset avant de convertir,
-    # pour être sûr des colonnes disponibles et des langues présentes.
     print("Splits disponibles :", list(dataset.keys()))
-    print("Colonnes disponibles :", dataset["train"].column_names)
+    print("Nombre d'exemples :", {k: len(v) for k, v in dataset.items()})
     print("Exemple brut :", dataset["train"][0])
-
-    # Si une colonne de langue existe (souvent nommée 'lang' ou 'topic'),
-    # on ne garde que les exemples en français.
-    if "lang" in dataset["train"].column_names:
-        print("Filtrage sur la langue française...")
-        dataset = dataset.filter(lambda example: example["lang"] == "fr")
 
     convert_split(dataset["train"], os.path.join(OUTPUT_DIR, "train.csv"))
     convert_split(dataset["validation"], os.path.join(OUTPUT_DIR, "val.csv"))
