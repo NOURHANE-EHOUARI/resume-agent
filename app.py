@@ -1,6 +1,6 @@
 """
 Application web Flask : interface pour uploader un fichier et obtenir
-un résumé généré par le modèle entraîné.
+un résumé généré par Llama (hébergé sur Colab, exposé via ngrok).
 
 Usage :
     python app.py
@@ -10,24 +10,14 @@ Puis ouvrir http://localhost:5000 dans le navigateur.
 import os
 import tempfile
 
+import requests
 from flask import Flask, request, jsonify, render_template
-
-from src.generate import load_model, summarize
-from src.train import get_device
 
 app = Flask(__name__)
 
-device = get_device()
-_model = None
-_tokenizer = None
-
-
-def get_model():
-    """Charge le modèle une seule fois, puis le réutilise (mis en cache en mémoire)."""
-    global _model, _tokenizer
-    if _model is None:
-        _model, _tokenizer = load_model(device)
-    return _model, _tokenizer
+# URL ngrok de l'API Colab qui héberge Llama.
+# À mettre à jour à chaque redémarrage de la session Colab.
+COLAB_API_URL = "https://surging-disrupt-levitator.ngrok-free.dev/summarize"
 
 
 def extract_text_from_file(filepath, filename):
@@ -74,17 +64,18 @@ def summarize_route():
         if not text.strip():
             return jsonify({"error": "Impossible d'extraire du texte de ce fichier"}), 400
 
-        model, tokenizer = get_model()
-        summary = summarize(text, model, tokenizer, device)
+        response = requests.post(COLAB_API_URL, json={"text": text}, timeout=120)
+        response.raise_for_status()
+        summary = response.json()["summary"]
 
         return jsonify({
             "summary": summary,
             "original_length": len(text.split()),
             "summary_length": len(summary.split()),
         })
-    except FileNotFoundError:
+    except requests.exceptions.RequestException:
         return jsonify({
-            "error": "Aucun modèle entraîné trouvé. Lance d'abord l'entraînement (python -m src.train)."
+            "error": "Impossible de contacter le modèle. Vérifie que la session Colab est toujours active."
         }), 503
     except Exception as e:
         return jsonify({"error": str(e)}), 500

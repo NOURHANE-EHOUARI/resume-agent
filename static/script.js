@@ -10,17 +10,12 @@ const errorBox = document.getElementById("errorBox");
 const errorText = document.getElementById("errorText");
 const resultBox = document.getElementById("resultBox");
 const summaryText = document.getElementById("summaryText");
-const originalLen = document.getElementById("originalLen");
-const summaryLen = document.getElementById("summaryLen");
-const compressionRate = document.getElementById("compressionRate");
 const copyBtn = document.getElementById("copyBtn");
 
 let selectedFile = null;
 
 const loadingSteps = [
   "Lecture du document...",
-  "Découpage en tokens...",
-  "Encodage du texte...",
   "Génération du résumé...",
 ];
 let loadingStepIndex = 0;
@@ -125,12 +120,6 @@ function stopLoading() {
 
 function showResult(data) {
   summaryText.textContent = data.summary;
-  originalLen.textContent = data.original_length;
-  summaryLen.textContent = data.summary_length;
-  const rate = data.original_length > 0
-    ? Math.round((1 - data.summary_length / data.original_length) * 100)
-    : 0;
-  compressionRate.textContent = `${rate}%`;
   resultBox.classList.remove("hidden");
   resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
